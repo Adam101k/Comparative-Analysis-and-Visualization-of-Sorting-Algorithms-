@@ -1,4 +1,5 @@
 # This will be where the collection of Alogirthms will be stored
+import time
 
 # Bubble Sort Algorithm
 # Input: An array `arr` of integers to be sorted.
@@ -132,3 +133,71 @@ def quick_sort(arr, low, high):
 
         # Recursively apply quicksort to the right half (elements greater than the pivot)
         quick_sort(arr, pi + 1, high)
+
+
+#counting function in order to sort the array based on our current number place.
+def counting_sort(array, base):
+    size = len(array) 
+    output = [0] * size
+    count = [0] * 10
+
+    #Counting how often our nth place number occurs
+    for i in range(0, size):
+        index = array[i] // base #index is our number based on what nth place we are currently at
+        count[index % 10] += 1
+
+    #Making count[i] have the actual position of the digits in the output array.
+    for i in range (1, 10):
+        count[i] += count[i - 1]
+    
+    #Filling out output array with our input array based on the position of our nth place base
+    for i in range(size -1, -1, -1):
+        index = array[i] // base
+        output[count[index % 10] - 1] = array[i]
+        count[index % 10] -= 1
+        i -= 1
+    #Copy the sorted array to our input array
+    for i in range(size):
+        array[i] = output[i]
+
+#Radix Sort Algorithm
+#Input: An array of integers
+#Time Complexity: O(d(n + b))
+#n is how many elements in our array
+#d is how many digits there are in our largest number
+#b is base of the numbers
+def radix_sort(array):
+    start = time.time()
+    my_max = max(array)
+    base = 1
+    while my_max / base >= 1:
+        counting_sort(array, base)
+        base *= 10
+    end = time.time()
+    algorithm_time = end - start
+    return algorithm_time, array
+
+
+#Linear Search Algorithm
+#Input: An array of integers and the target number in which we want to find.
+#Time Complexity: O(n) where n is the number of elements in our array. 
+def linear_search_algorithm(array, target):
+    #Gets the time when algorithm started
+    start = time.time()
+    #holder will hold all of the index for the number we want
+    holder = []
+
+    #Iterate through our array of integers to search for our target number.
+    for i in range(len(array)):
+        if array[i] == target:
+            holder.append(i)
+    #Gets the time when the algorithm is done
+    end = time.time()
+    #Math for how long the algorithm took
+    algorithm_time = end - start
+    #If target is not found, we return the time of our algorithm and -1.
+    if(len(holder) == 0):
+        return algorithm_time, -1
+    else:
+        #if at least one target is found, we return the time and the list of indices containing our target.
+        return algorithm_time, holder

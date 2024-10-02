@@ -30,34 +30,31 @@ def bubble_sort(arr):
 
 
 # Merge Sort Algorithm
-# Input: An array `arr` to be sorted, with indices `left` and `right` representing the portion of the array to sort.
+# Input: An array `arr` to be sorted.
 # The merge_sort function is a divide-and-conquer algorithm that recursively splits the array into halves, sorts each half,
 # and then merges the sorted halves. The total time complexity is O(n log n), where n is the number of elements in the array.
-def merge_sort(arr, left, right):
-    # Base case: If the length of the array is more than 1, proceed with sorting
-    if len(arr) > 1:
-        # Find the middle index of the array
-        mid = len(arr) // 2
-        
-        # Split the array into two halves: left and right
-        left = arr[:mid]
-        right = arr[mid:]
-        
-        # Recursively apply merge_sort to the left half
-        merge_sort(left, 0, len(left))
-        # Recursively apply merge_sort to the right half
-        merge_sort(right, 0, len(right))
+def merge_sort(arr):
+    # Base case: If the length of the array is less than or equal to 1, it is already sorted
+    if len(arr) <= 1:
+        return arr
+    
+    # Find the middle index of the array
+    mid = len(arr) // 2
+    
+    # Split the array into two halves: left and right
+    left = arr[:mid]
+    right = arr[mid:]
+    
+    # Recursively apply merge_sort to the left and right halves
+    left_sorted = merge_sort(left)
+    right_sorted = merge_sort(right)
 
-        # Merge the two sorted halves into one sorted array
-        arr = merge(left, right)
-    
-    # Return the sorted array
-    return arr
-    
+    # Merge the two sorted halves into one sorted array
+    return merge(left_sorted, right_sorted)
 
 
 # Merge function to combine two sorted arrays
-# Input: Two sorted arrays `left` and `right`, which are parts of the original array
+# Input: Two sorted arrays `left` and `right`, which are parts of the original array.
 # The merge function merges the two sorted arrays into a single sorted array.
 # The time complexity of this function is O(n), where n is the total number of elements in `left` and `right`.
 def merge(left, right):

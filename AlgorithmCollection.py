@@ -159,10 +159,9 @@ def counting_sort(array, base):
 
 #Radix Sort Algorithm
 #Input: An array of integers
-#Time Complexity: O(d(n + b))
+#Time Complexity: O(n*d)
 #n is how many elements in our array
 #d is how many digits there are in our largest number
-#b is base of the numbers
 def radix_sort(array):
     start = time.time()
     my_max = max(array)

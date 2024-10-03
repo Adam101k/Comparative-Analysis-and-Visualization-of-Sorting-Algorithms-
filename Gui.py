@@ -64,6 +64,10 @@ class SortingSearchApp:
         self.reset_button.pack(side=tk.BOTTOM, pady=5)
         self.reset_button.config(state=tk.DISABLED)  
 
+        #Text label for time
+        self.time_var = tk.StringVar(value="Time: 0.000000 seconds")
+        self.time_label = tk.Label(self.button_frame, textvariable=self.time_var, bg="lightcoral", font=("Arial", 16))
+        self.time_label.pack(side=tk.TOP, pady=5)
     def update_bars(self, arr):
         """Update the heights of the bars in the bar chart."""
         for bar, val in zip(self.bars, arr):
@@ -131,6 +135,7 @@ class SortingSearchApp:
             self.root.after(50, self.sort_step)  # Schedule the next step after 50 ms
         except StopIteration:
             print(f"Sorting completed in {self.place_time:.8f} seconds.")
+            self.time_var.set(f"Time: {self.place_time:.8f} seconds")
             self.pause_button.config(state=tk.DISABLED)  # Disable pause when sorting is done
             self.sorting_running = False
 

@@ -1,35 +1,7 @@
 # This will be where the collection of Alogirthms will be stored
-
-# Bubble Sort Algorithm
-# Input: An array `arr` of integers to be sorted.
-# Bubble Sort repeatedly steps through the array, compares adjacent elements, and swaps them if they are in the wrong order.
-# The process repeats until the entire array is sorted. 
-# Time complexity: O(n^2) in the worst and average case due to the nested loops, making it inefficient for large datasets.
-#def bubble_sort(arr):
-
-    # Get the length of the array
-    #n = len(arr)
-
-    # Outer loop runs n times (where n is the length of the array).
-    # With each pass, the largest unsorted element "bubbles" to the correct position.
-    #for i in range(n):
-        
-        # Inner loop runs from 0 to n-i-1 because after each iteration of the outer loop,
-        # the last i elements are already sorted, so they don't need to be checked again.
-        #for j in range(0, n-i-1):
-            
-            # Compare the current element with the next one
-            # If the current element is greater, swap it with the next element.
-            #if arr[j] > arr[j+1]:
-                # Swap the elements to put them in correct order
-                #arr[j], arr[j+1] = arr[j+1], arr[j]
-    
-    # Return the sorted array
-    #return arr
 import matplotlib.pyplot as plt
 import time
-
-def bubble_sort(arr, update_bars,canvas):
+def bubble_sort(arr):
     n = len(arr)
 
     # Outer loop runs n times (where n is the length of the array).
@@ -37,18 +9,16 @@ def bubble_sort(arr, update_bars,canvas):
         # Inner loop runs from 0 to n-i-1 because the last i elements are already sorted.
         for j in range(0, n-i-1):
             # Update the visualization before the swap
-            update_bars(arr)
-            canvas.pause(0.1)  # Pause for a brief moment to visualize the change
-
+            plt.bar(range(len(arr)), arr, color='blue')
+            plt.pause(0.5)  # Pause for a brief moment to visualize the change
+            plt.clf()
             # Compare the current element with the next one
             if arr[j] > arr[j+1]:
                 # Swap the elements to put them in correct order
                 arr[j], arr[j+1] = arr[j+1], arr[j]
 
         # Update the visualization after the last swap of the current pass
-        update_bars(arr)
-        canvas.pause(0.1)  # Pause for a brief moment to visualize the chang
-
+        plt.show()
 
 # Merge Sort Algorithm
 # Input: An array `arr` to be sorted.
@@ -69,7 +39,6 @@ def merge_sort(arr):
     # Recursively apply merge_sort to the left and right halves
     left_sorted = merge_sort(left)
     right_sorted = merge_sort(right)
-
     # Merge the two sorted halves into one sorted array
     return merge(left_sorted, right_sorted)
 

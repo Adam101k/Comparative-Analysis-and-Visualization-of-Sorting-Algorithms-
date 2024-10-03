@@ -14,9 +14,9 @@
 ### Prerequisites
 
 1) Python 3
-2) Matplotlib
-3) NumPy
-4) Tkinter
+2) Matplotlib (Used for plotting graphs)
+3) NumPy (Used for random number generation)
+4) Tkinter (Used for radio buttons, buttons, and styling)
 
 <br/>
 

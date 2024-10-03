@@ -1,5 +1,4 @@
 # This will be where the collection of Alogirthms will be stored
-import time
 
 # Bubble Sort Algorithm
 # Input: An array `arr` of integers to be sorted.

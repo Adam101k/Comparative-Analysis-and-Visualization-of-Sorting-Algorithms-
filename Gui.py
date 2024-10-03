@@ -20,7 +20,7 @@ class SortingSearchApp:
 
         # Create Matplotlib figure and axis
         self.fig, self.ax = plt.subplots(figsize=(8, 6))
-        self.arr = np.random.randint(1, 100, 20)  # Start with 20 random numbers
+        self.arr = np.random.randint(1, 100, 0)  # Start with 20 random numbers
         self.bars = self.ax.bar(range(len(self.arr)), self.arr, align='center', color='darkblue')  # Default color blue
         self.ax.set_title('Sorting Algorithms (20 Random Numbers)')
 
@@ -69,7 +69,10 @@ class SortingSearchApp:
         self.reset_button.place(relx=0.25, rely=0.70, relwidth=0.5, relheight=0.25,anchor = "center")
         self.reset_button.pack(side=tk.BOTTOM, pady=5)
         self.reset_button.config(state=tk.DISABLED)  
-
+        #Text label for time
+        self.time_var = tk.StringVar(value="Time: 0.000000 seconds")
+        self.time_label = tk.Label(self.button_frame, textvariable=self.time_var, bg="lightcoral", font=("Arial", 16))
+        self.time_label.pack(side=tk.TOP, pady=5)
     def update_bars(self, arr):
         """Update the heights of the bars in the bar chart."""
         for bar, val in zip(self.bars, arr):
@@ -153,6 +156,7 @@ class SortingSearchApp:
             self.root.after(50, self.sort_step)  # Schedule the next step after 50 ms
         except StopIteration:
             print(f"Sorting completed in {self.place_time:.8f} seconds.")
+            self.time_var.set(f"Time: {self.place_time:.8f} seconds")
             self.pause_button.config(state=tk.DISABLED)  # Disable pause when sorting is done
             self.sorting_running = False
 

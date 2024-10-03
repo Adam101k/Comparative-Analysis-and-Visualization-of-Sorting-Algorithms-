@@ -2,6 +2,7 @@ import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 import numpy as np
+import AlgorithmCollection as algo
 
 root = tk.Tk()  # create root window
 root.title("GUI 1.0")
@@ -44,6 +45,7 @@ def on_startbutton_click():
     reset_button.config(state=tk.NORMAL)
     start_button.config(state=tk.DISABLED)
     update_timer()  # Start updating the timer
+    perform_sort()
     print("Start button was clicked!")
 
 def on_pausebutton_click():
@@ -73,6 +75,39 @@ category_var = tk.StringVar(value="Bubble Sort")  # Default selection
 # Create a frame for array input (hidden initially)
 input_frame = None
 
+def perform_sort():
+    selected_category = category_var.get()
+    
+    if selected_category == "Bubble Sort":
+        algo.bubble_sort(user_array, update_bars(user_array), canvas)
+          # Update visualization after sorting
+    
+    elif selected_category == "Merge Sort":
+        algo.merge_sort(user_array)
+
+    
+    elif selected_category == "Quick Sort":
+        if low is not None and high is not None:
+            algo.quick_sort(user_array, low, high)
+
+    elif selected_category == "Radix Sort":
+        algo.radix_sort(user_array)
+
+    
+    elif selected_category == "Linear Search Algorithm":
+        if target_num is not None:
+            algo.linear_search_algorithm(user_array, target_num)
+
+
+def update_bars(arr):
+    plt.clf()  # Clear the current figure
+    plt.bar(range(len(arr)), arr, color='blue')  # Create a bar chart
+    plt.title("Bubble Sort Visualization")
+    plt.xlabel("Index")
+    plt.ylabel("Value")
+    plt.ylim(0, max(arr) + 1)  # Set y-axis limits for better visibility
+    plt.grid(axis='y')
+    plt.draw()  # Draw the updated figure
 # Function to handle category selection
 def on_category_select():
     global input_frame
@@ -81,20 +116,16 @@ def on_category_select():
     
     # If "Bubble Sort" is selected, show an input frame
     if selected_category == "Bubble Sort":
-        if input_frame:  # Destroy the previous frame if it exists
+        if input_frame:
             input_frame.destroy()
-        # Create a new frame inside graphic_frame for input
-        input_frame = tk.Frame(root, bg="lightgreen", width=300, height=200)
-        input_frame.place(x=0, rely=0.25, width = 300)
-        
         # Add a label and entry field for array input
-        label = tk.Label(input_frame, text="Enter Array (comma-separated):", font=("Arial", 12), bg="lightgreen", fg="black")
+        label = tk.Label(selection_frame, text="Enter Array (comma-separated):", font=("Arial", 12), bg="lightgreen", fg="black")
         label.pack(pady=10)
         
-        array_entry = tk.Entry(input_frame, width=30)
+        array_entry = tk.Entry(selection_frame, width=30)
         array_entry.pack(pady=10)
         
-        submit_button = tk.Button(input_frame, text="Submit", font=("Arial", 12), command=lambda: submit_array(array_entry.get()))
+        submit_button = tk.Button(selection_frame, text="Submit", font=("Arial", 12), command=lambda: submit_array(array_entry.get()))
         submit_button.pack(pady=10)
 
     elif selected_category == "Merge Sort":
@@ -245,10 +276,26 @@ reset_button.config(state=tk.DISABLED)
 
 # Dynamic graphic_frame that resizes with the window, placed next to the other frames
 
+def on_resize(event):
+    # Get the current window size (width and height in pixels)
+    window_width = event.width
+    window_height = event.height
+    
+    # Convert the width and height to inches (considering the DPI)
+    fig_width = window_width / 100  # Divide by DPI (100 in this case)
+    fig_height = window_height / 100  # Divide by DPI (100 in this case)
+    
+    # Update figure size
+    fig.set_size_inches(fig_width, fig_height)
+    canvas.draw()
+
+fig, ax = plt.subplots(figsize=(6, 4), dpi=100)
+canvas = FigureCanvasTkAgg(fig, master=root)
+canvas.get_tk_widget().place(x = 300, rely=0.0, relheight=1)
 
 
 
-graphic_frame = tk.Frame(root, bg="gray")
-graphic_frame.place(x=300, rely=0, relwidth=1.0, relheight=1)  # Starts at x=300, occupies remaining space
+#graphic_frame = tk.Frame(root, bg="gray")
+#graphic_frame.place(x=300, rely=0, relwidth=1.0, relheight=1)  # Starts at x=300, occupies remaining space
 
 root.mainloop()

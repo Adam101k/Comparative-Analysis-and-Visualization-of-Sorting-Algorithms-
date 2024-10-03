@@ -3,6 +3,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 import numpy as np
 import AlgorithmCollection as algo
+import threading
 root = tk.Tk()  # create root window
 root.title("GUI 1.0")
 root.config(bg="skyblue")
@@ -14,6 +15,9 @@ low = None
 high = None
 target_num = None
 
+current_sorting_algorithm = None  
+sorting_in_progress = False  # Keep track of whether sorting is in progress
+pause_flag = [True]
 
 # Fixed size selection_frame (300px wide, 70% of the window's height)
 selection_frame = tk.Frame(root, bg="lightcoral")
@@ -37,25 +41,50 @@ def update_timer():
 
 # Define a function to be called when the start button is clicked
 def on_startbutton_click():
-    global is_running
-    is_running = True
+    global sorting_in_progress, current_sorting_algorithm
+    sorting_in_progress = True
     pause_button.config(state=tk.NORMAL)
     reset_button.config(state=tk.NORMAL)
     start_button.config(state=tk.DISABLED)
     update_timer()  # Start updating the timer
-    perform_sort()
-    print("Start button was clicked!")
+
+    selected_category = category_var.get()
+
+    # Start the correct sorting algorithm
+    if selected_category == "Bubble Sort":
+        current_sorting_algorithm = algo.bubble_sort
+        algo.bubble_sort(user_array, update_visualization, pause_flag, root.after)
+
+    elif selected_category == "Merge Sort":
+        current_sorting_algorithm = algo.merge_sort
+        algo.merge_sort(user_array, update_visualization, pause_flag, root.after)
+
+    elif selected_category == "Quick Sort":
+        if low is not None and high is not None:
+            current_sorting_algorithm = algo.quick_sort
+            algo.quick_sort(user_array, low, high, update_visualization, pause_flag, root.after)
+
+    elif selected_category == "Radix Sort":
+        current_sorting_algorithm = algo.radix_sort
+        algo.radix_sort(user_array, update_visualization, pause_flag, root.after)
+
+    print(f"Started sorting with {selected_category}")
 
 def on_pausebutton_click():
-    global is_running
-    is_running = not is_running  # Toggle the running state
-    if is_running:
-        pause_button.config(text="Pause")
-        update_timer()
-        print("Resumed timer.")
-    else:
+    global current_sorting_algorithm
+
+    if pause_flag[0]:  # If currently running
+        pause_flag[0] = False  # Pause the sorting
         pause_button.config(text="Resume")
-        print("Paused timer")
+        print("Paused sorting.")
+    else:
+        pause_flag[0] = True  # Resume the sorting
+        pause_button.config(text="Pause")
+        print("Resumed sorting.")
+        
+        # Resume the current sorting algorithm
+        if current_sorting_algorithm is not None:
+            current_sorting_algorithm(user_array, update_visualization, pause_flag, root.after)
 
 def on_resetbutton_click():
     global is_running, elapsed_time
@@ -72,29 +101,6 @@ category_var = tk.StringVar(value="Bubble Sort")  # Default selection
 
 # Create a frame for array input (hidden initially)
 input_frame = None
-
-def perform_sort():
-    selected_category = category_var.get()
-    
-    if selected_category == "Bubble Sort":
-        algo.bubble_sort(user_array)
-          # Update visualization after sorting
-    
-    elif selected_category == "Merge Sort":
-        algo.merge_sort(user_array)
-
-    
-    elif selected_category == "Quick Sort":
-        if low is not None and high is not None:
-            algo.quick_sort(user_array, low, high)
-
-    elif selected_category == "Radix Sort":
-        algo.radix_sort(user_array)
-
-    
-    elif selected_category == "Linear Search Algorithm":
-        if target_num is not None:
-            algo.linear_search_algorithm(user_array, target_num)
 
 # Function to handle category selection
 def on_category_select():
@@ -186,6 +192,14 @@ def submit_linear_search(array_string, target_string):
     except ValueError:
         print("Invalid input. Please enter a valid array.")
 
+def update_visualization(arr):
+    plt.clf()  # Clear the current figure
+    plt.bar(range(len(arr)), arr, color='blue')  # Create a bar graph
+    plt.title("Sorting Visualization")
+    plt.xlabel("Index")
+    plt.ylabel("Value")
+    plt.ion()  # Enable interactive mode
+    plt.pause(0.9)  # Pause for a brief moment to visualize the change
 
 
 # Create radio buttons for category selection

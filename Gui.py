@@ -3,11 +3,9 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 import numpy as np
 import AlgorithmCollection as algo
-
 root = tk.Tk()  # create root window
 root.title("GUI 1.0")
 root.config(bg="skyblue")
-
 root.geometry("1200x800")
 root.minsize(800, 800)
 
@@ -79,7 +77,7 @@ def perform_sort():
     selected_category = category_var.get()
     
     if selected_category == "Bubble Sort":
-        algo.bubble_sort(user_array, update_bars(user_array), canvas)
+        algo.bubble_sort(user_array)
           # Update visualization after sorting
     
     elif selected_category == "Merge Sort":
@@ -98,129 +96,64 @@ def perform_sort():
         if target_num is not None:
             algo.linear_search_algorithm(user_array, target_num)
 
-
-def update_bars(arr):
-    plt.clf()  # Clear the current figure
-    plt.bar(range(len(arr)), arr, color='blue')  # Create a bar chart
-    plt.title("Bubble Sort Visualization")
-    plt.xlabel("Index")
-    plt.ylabel("Value")
-    plt.ylim(0, max(arr) + 1)  # Set y-axis limits for better visibility
-    plt.grid(axis='y')
-    plt.draw()  # Draw the updated figure
 # Function to handle category selection
 def on_category_select():
     global input_frame
     selected_category = category_var.get()
     print(f"Selected category: {selected_category}")
-    
-    # If "Bubble Sort" is selected, show an input frame
-    if selected_category == "Bubble Sort":
-        if input_frame:
-            input_frame.destroy()
-        # Add a label and entry field for array input
-        label = tk.Label(selection_frame, text="Enter Array (comma-separated):", font=("Arial", 12), bg="lightgreen", fg="black")
-        label.pack(pady=10)
-        
-        array_entry = tk.Entry(selection_frame, width=30)
-        array_entry.pack(pady=10)
-        
-        submit_button = tk.Button(selection_frame, text="Submit", font=("Arial", 12), command=lambda: submit_array(array_entry.get()))
-        submit_button.pack(pady=10)
 
-    elif selected_category == "Merge Sort":
-        if input_frame:
-            input_frame.destroy()
-       # Create a new frame inside graphic_frame for input
-        input_frame = tk.Frame(root, bg="lightgreen", width=300, height=200)
-        input_frame.place(x=0, rely=0.25, width = 300)
-        
-        # Add a label and entry field for array input
-        label = tk.Label(input_frame, text="Enter Array (comma-separated):", font=("Arial", 12), bg="lightgreen", fg="black")
-        label.pack(pady=10)
-        
-        array_entry = tk.Entry(input_frame, width=30)
-        array_entry.pack(pady=10)
-        
-        submit_button = tk.Button(input_frame, text="Submit", font=("Arial", 12), command=lambda: submit_array(array_entry.get()))
-        submit_button.pack(pady=10)
-    
-    elif selected_category == "Quick Sort":
-        if input_frame:
-            input_frame.destroy()  # Destroy the previous input frame if it exists
-    
-        input_frame = tk.Frame(root, bg="lightgreen", width=300)  # Create a new input frame
-        input_frame.place(x=0, rely=0.25, width=300, relheight=0.45)  # Place the frame at the appropriate position
+    # If an input frame already exists, destroy it
+    if input_frame:
+        input_frame.destroy()
+
+    # Create a new input frame for user input
+    input_frame = tk.Frame(root, bg="lightgreen", width=300)
+    input_frame.place(x=0, rely=0.25, width=300, relheight=0.4)  # Adjust height as needed
 
     # Add a label and entry field for array input
-        label = tk.Label(input_frame, text="Enter Array (comma-separated):", font=("Arial", 12), bg="lightgreen", fg="black")
-        label.place(relx=0.05, rely=0.05, relwidth=0.9, relheight=0.1)  # Adjust placement and size to be smaller
+    label = tk.Label(input_frame, text="Enter Array (comma-separated):", font=("Arial", 12), bg="lightgreen", fg="black")
+    label.pack(pady=10)
 
-        array_entry = tk.Entry(input_frame, width=30)
-        array_entry.place(relx=0.05, rely=0.15, relwidth=0.9, relheight=0.1)  # Adjust placement and size
+    array_entry = tk.Entry(input_frame, width=30)
+    array_entry.pack(pady=10)
 
-    # Add label and entry for low value
-        label2 = tk.Label(input_frame, text="Enter one integer for low", font=("Arial", 12), bg="lightgreen", fg="black")
-        label2.place(relx=0.05, rely=0.30, relwidth=0.9, relheight=0.1)  # Adjust placement and size to fit
+    # Check which sorting algorithm was selected
+    if selected_category in ["Bubble Sort", "Merge Sort", "Radix Sort"]:
+        submit_button = tk.Button(input_frame, text="Submit", font=("Arial", 12), command=lambda: submit_array(array_entry.get()))
+        submit_button.pack(pady=10)
+
+    elif selected_category == "Quick Sort":
+        # Additional fields for Quick Sort
+        label2 = tk.Label(input_frame, text="Enter one integer for low:", font=("Arial", 12), bg="lightgreen", fg="black")
+        label2.pack(pady=(10, 0))  # Add top padding only
 
         low_entry = tk.Entry(input_frame, width=30)
-        low_entry.place(relx=0.05, rely=0.40, relwidth=0.9, relheight=0.1)  # Adjust placement and size
+        low_entry.pack(pady=10)
 
-    # Add label and entry for high value
-        label3 = tk.Label(input_frame, text="Enter one integer for high", font=("Arial", 12), bg="lightgreen", fg="black")
-        label3.place(relx=0.05, rely=0.55, relwidth=0.9, relheight=0.1)  # Adjust placement and size
+        label3 = tk.Label(input_frame, text="Enter one integer for high:", font=("Arial", 12), bg="lightgreen", fg="black")
+        label3.pack(pady=(10, 0))  # Add top padding only
 
         high_entry = tk.Entry(input_frame, width=30)
-        high_entry.place(relx=0.05, rely=0.65, relwidth=0.9, relheight=0.1)  # Adjust placement and size
+        high_entry.pack(pady=10)
 
         quick_sort_button = tk.Button(input_frame, text="Submit", command=lambda: run_quick_sort(array_entry.get(), low_entry.get(), high_entry.get()))
-        quick_sort_button.place(relx=0.3, rely=0.80, relwidth=0.4, relheight=0.15)  # Adjust button placement and size
-
-    # Optional: Force a UI update to ensure the frame and its contents are shown immediately
-        root.update()
-
-
-    elif selected_category == "Radix Sort":
-        if input_frame:
-            input_frame.destroy()
-        # Create a new frame inside graphic_frame for input
-        input_frame = tk.Frame(root, bg="lightgreen", width=300, height=200)
-        input_frame.place(x=0, rely=0.25, width = 300)
-        
-        # Add a label and entry field for array input
-        label = tk.Label(input_frame, text="Enter Array (comma-separated):", font=("Arial", 12), bg="lightgreen", fg="black")
-        label.pack(pady=10)
-        
-        array_entry = tk.Entry(input_frame, width=30)
-        array_entry.pack(pady=10)
-        
-        submit_button = tk.Button(input_frame, text="Submit", font=("Arial", 12), command=lambda: submit_array(array_entry.get()))
-        submit_button.pack(pady=10)
-
+        quick_sort_button.pack(pady=10)
 
     elif selected_category == "Linear Search Algorithm":
-        if input_frame:
-            input_frame.destroy()
-
-        input_frame = tk.Frame(root, bg="lightgreen", width=300)  # Create a new input frame
-        input_frame.place(x=0, rely=0.25, width=300, relheight=0.30 )  # Place the frame at the appropriate position
-
-    # Add a label and entry field for array input
-        label = tk.Label(input_frame, text="Enter Array (comma-separated):", font=("Arial", 12), bg="lightgreen", fg="black")
-        label.place(relx=0.05, rely=0.05, relwidth=0.9, relheight=0.1)  # Adjust placement and size to be smaller
-
-        array_entry = tk.Entry(input_frame, width=30)
-        array_entry.place(relx=0.05, rely=0.15, relwidth=0.9, relheight=0.1)  # Adjust placement and size
-
-    # Add label and entry for 
-        label2 = tk.Label(input_frame, text="Enter one integer for target", font=("Arial", 12), bg="lightgreen", fg="black")
-        label2.place(relx=0.05, rely=0.30, relwidth=0.9, relheight=0.1)  # Adjust placement and size to fit
+        # Additional input for Linear Search target
+        label2 = tk.Label(input_frame, text="Enter one integer for target:", font=("Arial", 12), bg="lightgreen", fg="black")
+        label2.pack(pady=(10, 0))  # Add top padding only
 
         target_entry = tk.Entry(input_frame, width=30)
-        target_entry.place(relx=0.05, rely=0.40, relwidth=0.9, relheight=0.1)  # Adjust placement and size
+        target_entry.pack(pady=10)
 
         submit_button = tk.Button(input_frame, text="Submit", font=("Arial", 12), command=lambda: submit_linear_search(array_entry.get(), target_entry.get()))
-        submit_button.place(relx=0.3, rely=0.80, relwidth=0.4, relheight=0.15)
+        submit_button.pack(pady=10)
+
+    # Optional: Force a UI update to ensure the frame and its contents are shown immediately
+    root.update()
+
+
 
 
 # Function to handle the array input submission
@@ -275,27 +208,5 @@ reset_button.place(relx=0.25, rely=0.70, relwidth=0.5, relheight=0.25)
 reset_button.config(state=tk.DISABLED)
 
 # Dynamic graphic_frame that resizes with the window, placed next to the other frames
-
-def on_resize(event):
-    # Get the current window size (width and height in pixels)
-    window_width = event.width
-    window_height = event.height
-    
-    # Convert the width and height to inches (considering the DPI)
-    fig_width = window_width / 100  # Divide by DPI (100 in this case)
-    fig_height = window_height / 100  # Divide by DPI (100 in this case)
-    
-    # Update figure size
-    fig.set_size_inches(fig_width, fig_height)
-    canvas.draw()
-
-fig, ax = plt.subplots(figsize=(6, 4), dpi=100)
-canvas = FigureCanvasTkAgg(fig, master=root)
-canvas.get_tk_widget().place(x = 300, rely=0.0, relheight=1)
-
-
-
-#graphic_frame = tk.Frame(root, bg="gray")
-#graphic_frame.place(x=300, rely=0, relwidth=1.0, relheight=1)  # Starts at x=300, occupies remaining space
 
 root.mainloop()

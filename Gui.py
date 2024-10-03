@@ -108,6 +108,7 @@ class SortingSearchApp:
         self.pause_button.config(state=tk.DISABLED, text="Pause")  # Disable pause button
 
     # Generate a new random array or reset the original array
+        self.ax.cla()
         self.arr = np.random.randint(1, 100, self.num)  # New array of 20 random numbers
         self.update_bars(self.arr)  # Reset the bars to the new array
     

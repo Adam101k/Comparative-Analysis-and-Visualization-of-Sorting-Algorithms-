@@ -15,6 +15,8 @@
 
 1) Python 3
 2) Matplotlib
+3) NumPy
+4) Tkinter
 
 <br/>
 

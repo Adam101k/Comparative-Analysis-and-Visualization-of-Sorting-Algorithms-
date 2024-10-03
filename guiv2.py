@@ -28,7 +28,6 @@ class SortingSearchApp:
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame_plot)
         self.canvas.get_tk_widget().pack()
 
-
         # Fixed size selection_frame (300px wide, 70% of the window's height)
         self.selection_frame = tk.Frame(self.root, bg="lightcoral")
         self.selection_frame.place(x=0, y=0, width=300, relheight=0.7)  # Fixed width, relative height
@@ -65,7 +64,11 @@ class SortingSearchApp:
         self.reset_button.place(relx=0.25, rely=0.70, relwidth=0.5, relheight=0.25)
         self.reset_button.pack(side=tk.BOTTOM, pady=5)
         self.reset_button.config(state=tk.DISABLED)  
-
+        
+        #Text label for time
+        self.time_var = tk.StringVar(value="Time: 0.000000 seconds")
+        self.time_label = tk.Label(self.button_frame, textvariable=self.time_var, bg="lightcoral", font=("Arial", 16))
+        self.time_label.pack(side=tk.TOP, pady=5)
     def update_bars(self, arr):
         """Update the heights of the bars in the bar chart."""
         for bar, val in zip(self.bars, arr):
@@ -120,12 +123,15 @@ class SortingSearchApp:
                 self.root.after(50, sort_step)  # Pause for 50 milliseconds
                 self.place_time += end_iteration_time
             except StopIteration:
+                #self.time_label.config(text=f"Time: {self.place_time:.8f} seconds")
+                self.time_var.set(f"Time: {self.place_time:.8f} seconds")
                 print(f"{action} completed in {self.place_time:.8f} seconds.")
-
         sort_step()
 
 
 if __name__ == "__main__":
     root = tk.Tk()
+    app = SortingSearchApp(root)
+    root.mainloop()
     app = SortingSearchApp(root)
     root.mainloop()

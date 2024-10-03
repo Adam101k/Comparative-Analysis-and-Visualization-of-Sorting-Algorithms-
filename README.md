@@ -25,12 +25,12 @@
 3) Enter command
 
   ```
-  python guiv2.py
+  python gui.py
   ```            
   or
        
   ```
-  python3 guiv2.py
+  python3 gui.py
   ```
 
 

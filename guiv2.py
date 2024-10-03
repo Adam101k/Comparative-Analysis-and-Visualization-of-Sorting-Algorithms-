@@ -13,6 +13,7 @@ class SortingSearchApp:
         self.root.geometry("1200x800")
         self.root.minsize(800, 800)
 
+        self.place_time = 0
         # Frame for the canvas and plot
         self.frame_plot = tk.Frame(self.root)
         self.frame_plot.grid(row=10, column=10, padx=50, pady=0)
@@ -97,7 +98,6 @@ class SortingSearchApp:
     def run_sorting(self, action):
         """Run the selected sorting algorithm."""
         self.arr = list(self.arr)  # Convert to list to avoid NumPy issues
-        start_time = time.time()  # Record the start time
 
         # Choose the sorting method based on selection
         if action == 'Bubble Sort':
@@ -112,12 +112,15 @@ class SortingSearchApp:
         def sort_step():
             nonlocal generator
             try:
+                start_iteration_time = time.time()
                 step = next(generator)
+                end_iteration_time = time.time() - start_iteration_time
+                self.place_time += end_iteration_time
                 self.update_bars(step)
                 self.root.after(50, sort_step)  # Pause for 50 milliseconds
+                self.place_time += end_iteration_time
             except StopIteration:
-                elapsed_time = time.time() - start_time
-                print(f"{action} completed in {elapsed_time:.4f} seconds.")
+                print(f"{action} completed in {self.place_time:.8f} seconds.")
 
         sort_step()
 

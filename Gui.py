@@ -12,7 +12,7 @@ class SortingSearchApp:
         self.root.config(bg="skyblue")
         self.root.geometry("1200x800")
         self.root.minsize(800, 800)
-
+        self.num = 0
         self.place_time = 0
         # Frame for the canvas and plot
         self.frame_plot = tk.Frame(self.root)
@@ -80,8 +80,9 @@ class SortingSearchApp:
         self.canvas.draw()  # Redraw the canvas
 
     def generate_random_numbers(self):
-        num = int(self.generate_entry.get())
-        self.arr = np.random.randint(1, 100, num)
+        self.num = int(self.generate_entry.get())
+        self.arr = np.random.randint(1, 100, self.num)
+        self.bars = self.ax.bar(range(len(self.arr)), self.arr, align='center', color='darkblue')  # Default color blue
         self.update_bars(self.arr)
         print(f"Generated new array: {self.arr}")
 
@@ -107,7 +108,7 @@ class SortingSearchApp:
         self.pause_button.config(state=tk.DISABLED, text="Pause")  # Disable pause button
 
     # Generate a new random array or reset the original array
-        self.arr = np.random.randint(1, 100, 20)  # New array of 20 random numbers
+        self.arr = np.random.randint(1, 100, self.num)  # New array of 20 random numbers
         self.update_bars(self.arr)  # Reset the bars to the new array
     
     # Reset any other states as needed

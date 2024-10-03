@@ -1,24 +1,39 @@
-# This will be where the collection of Alogirthms will be stored
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import numpy as np
 import time
-def bubble_sort(arr):
+
+
+def bubble_sort(arr, update_visualization, pause_flag, after_function):
     n = len(arr)
+    i = 0  # Outer loop index
 
-    # Outer loop runs n times (where n is the length of the array).
-    for i in range(n):
-        # Inner loop runs from 0 to n-i-1 because the last i elements are already sorted.
-        for j in range(0, n-i-1):
-            # Update the visualization before the swap
-            plt.bar(range(len(arr)), arr, color='blue')
-            plt.pause(0.5)  # Pause for a brief moment to visualize the change
-            plt.clf()
-            # Compare the current element with the next one
-            if arr[j] > arr[j+1]:
-                # Swap the elements to put them in correct order
-                arr[j], arr[j+1] = arr[j+1], arr[j]
+    def sort_step():
+        nonlocal i
+        if i < n:
+            j = 0
+            while j < n - i - 1:
+                if not pause_flag[0]:
+                    return  # If paused, exit and stop further sorting until resumed
 
-        # Update the visualization after the last swap of the current pass
-        plt.show()
+                # Swap if the current element is greater than the next
+                if arr[j] > arr[j + 1]:
+                    arr[j], arr[j + 1] = arr[j + 1], arr[j]
+
+                # Update the visualization
+                update_visualization(arr)
+                j += 1
+            
+            i += 1  # Move to the next pass
+            after_function(100, sort_step)  # Schedule the next step with Tkinter's after
+        else:
+            update_visualization(arr)  # Final visualization when sorting is complete
+
+    sort_step()  # Start sorting process
+
+
+
+
 
 # Merge Sort Algorithm
 # Input: An array `arr` to be sorted.
@@ -39,6 +54,7 @@ def merge_sort(arr):
     # Recursively apply merge_sort to the left and right halves
     left_sorted = merge_sort(left)
     right_sorted = merge_sort(right)
+
     # Merge the two sorted halves into one sorted array
     return merge(left_sorted, right_sorted)
 

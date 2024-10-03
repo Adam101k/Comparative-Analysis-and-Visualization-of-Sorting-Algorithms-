@@ -17,6 +17,23 @@
 2) Matplotlib (Used for plotting graphs)
 3) NumPy (Used for random number generation)
 4) Tkinter (Used for radio buttons, buttons, and styling)
+<br/>
+
+### How to Run it
+1) Download AlgorithmCollection.py and guiv2.py into the same folder.
+2) In terminal, cd into the folder that you have AlgorithmCollection.py and guiv2.py.
+3) Enter command
+
+  ```
+  python guiv2.py
+  ```            
+  or
+       
+  ```
+  python3 guiv2.py
+  ```
+
+
 
 <br/>
 

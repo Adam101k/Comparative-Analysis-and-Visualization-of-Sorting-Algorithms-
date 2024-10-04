@@ -2,7 +2,7 @@ import tkinter as tk
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from AlgorithmCollection import bubble_sort, merge_sort, quick_sort, radix_sort
+from AlgorithmCollection import bubble_sort, merge_sort, quick_sort, radix_sort, linear_search
 import time
 
 class SortingSearchApp:
@@ -20,9 +20,9 @@ class SortingSearchApp:
 
         # Create Matplotlib figure and axis
         self.fig, self.ax = plt.subplots(figsize=(8, 6))
-        self.arr = np.random.randint(1, 100, 0)  # Start with 20 random numbers
+        self.arr = np.random.randint(1, 100, 0) 
         self.bars = self.ax.bar(range(len(self.arr)), self.arr, align='center', color='darkblue')  # Default color blue
-        self.ax.set_title('Sorting Algorithms (20 Random Numbers)')
+        self.ax.set_title('Sorting Algorithms')
 
         # Canvas for embedding the Matplotlib figure in Tkinter
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame_plot)
@@ -47,7 +47,7 @@ class SortingSearchApp:
         for action in actions:
             tk.Radiobutton(self.radio_frame, text=action, variable=self.selected_action, value=action, bg="lightcoral").pack(anchor=tk.W)
 
-        self.generate_label = tk.Label(self.button_frame, text="Generate Random Numbers", bg="red", font=("Arial", 16))
+        self.generate_label = tk.Label(self.button_frame, text="Enter Intended Array Size", bg="red", font=("Arial", 16))
         self.generate_label.pack(side=tk.TOP, pady=5)
 
         self.generate_entry = tk.Entry(self.button_frame)
@@ -96,7 +96,7 @@ class SortingSearchApp:
         selected_action = self.selected_action.get()
         print(f"Starting {selected_action}...")
 
-        if selected_action in ['Bubble Sort', 'Merge Sort', 'Quick Sort', 'Radix Sort']:
+        if selected_action in ['Bubble Sort', 'Merge Sort', 'Quick Sort', 'Radix Sort', 'Linear Search']:
             self.run_sorting(selected_action)
 
     def reset_action(self):
@@ -137,6 +137,11 @@ class SortingSearchApp:
             self.generator = quick_sort(self.arr, 0, len(self.arr) - 1)  # Needs to be a generator
         elif action == 'Radix Sort':
             self.generator = radix_sort(self.arr)  # Needs to be a generator
+        elif action == 'Linear Search':
+            target = np.random.choice(self.arr)  # Pick a random value from the array as the target
+            print(f"Searching for target value: {target}")
+            self.generator = linear_search(self.arr, target)  # Pass array and target to linear_search
+            self.highlight_search(target)  # Start the linear search visualization
 
         # Check if the generator was properly assigned
         if self.generator is not None:
@@ -144,6 +149,33 @@ class SortingSearchApp:
         else:
             print(f"No generator found for {action}")
 
+    def highlight_search(self, target):
+        """Highlight the target element during the linear search."""
+        try:
+            # Only the index being checked is returned from linear_search now
+            found_index = next(self.generator)
+
+            # Update bar color based on the search result
+            for i, bar in enumerate(self.bars):
+                if i == found_index:
+                    bar.set_facecolor('green' if self.arr[i] == target else 'red')  # Green if found, red otherwise
+                else:
+                    bar.set_facecolor('darkblue')  # Reset other bars to default color
+
+            self.canvas.draw()  # Redraw the canvas
+            self.root.after(50, lambda: self.highlight_search(target))  # Continue the search
+
+        except StopIteration:
+            # Capture the end time and calculate the total time for the algorithm
+            self.end_time = time.time()
+            total_time = self.end_time - self.start_time
+            print(f"Search completed in {total_time:.8f} seconds.")
+            self.time_var.set(f"Time: {total_time:.8f} seconds")
+            self.pause_button.config(state=tk.DISABLED)  # Disable pause when done
+            self.sorting_running = False
+
+
+        
     def sort_step(self):
         """Perform one step of the sorting and pause if requested."""
         if self.is_paused or not self.sorting_running:
